@@ -32,6 +32,10 @@ class MkJSONCommand(StreamingCommand):
 
             outputfield = self.outputfield
 
+        if not self.includehidden:
+
+            self.includehidden = False
+
         for event in events:
 
             includedfields = set()
@@ -48,29 +52,25 @@ class MkJSONCommand(StreamingCommand):
 
                 for field in includedfields:
 
-                    outputdict[field] = event[field]
+                    if len(event[field]) > 0:
+
+                        outputdict[field] = event[field]
 
                 event[outputfield] = json.dumps(outputdict)
 
             else:
 
-                if self.includehidden:
+                outputdict = {}
 
-                    if self.includehidden == True:
+                for field in event:
 
-                        event[outputfield] = json.dumps(event)
+                    if self.includehidden or not re.match('^\_[^\_]',field):
 
-                else:
+                        if len(event[field]) > 0:
 
-                        outputdict = {}
+                            outputdict[field] = event[field]
 
-                        for field in event:
-
-                            if not re.match('^\_[^\_]',field):
-
-                                outputdict[field] = event[field]
-
-                        event[outputfield] = json.dumps(outputdict)
+                    event[outputfield] = json.dumps(outputdict)
 
             yield event
 
