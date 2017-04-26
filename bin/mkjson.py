@@ -70,7 +70,7 @@ class MkJSONCommand(StreamingCommand):
 
                             outputdict[field] = event[field]
 
-                    event[outputfield] = json.dumps(outputdict)
+                event[outputfield] = json.dumps(outputdict)
 
             yield event
 
