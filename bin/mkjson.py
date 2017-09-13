@@ -5,7 +5,7 @@ import sys
 import json
 import re
 
-@Configuration()
+@Configuration(required_fields=["*"])
 class MkJSONCommand(StreamingCommand):
     """ 
 
