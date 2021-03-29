@@ -21,6 +21,7 @@ class MkJSONCommand(StreamingCommand):
     """
     includehidden = Option(require=False, validate=validators.Boolean())
     outputfield = Option(require=False, validate=validators.Fieldname())
+    sortkeys = Option(require=False, validate=validators.Boolean())
 
     def stream(self, events):
 
@@ -35,6 +36,10 @@ class MkJSONCommand(StreamingCommand):
         if not self.includehidden:
 
             self.includehidden = False
+
+        if not self.sortkeys:
+
+            self.sortkeys = False
 
         for event in events:
 
@@ -56,7 +61,7 @@ class MkJSONCommand(StreamingCommand):
 
                         outputdict[field] = event[field]
 
-                event[outputfield] = json.dumps(outputdict)
+                event[outputfield] = json.dumps(outputdict, sort_keys=self.sortkeys)
 
             else:
 
@@ -70,7 +75,7 @@ class MkJSONCommand(StreamingCommand):
 
                             outputdict[field] = event[field]
 
-                event[outputfield] = json.dumps(outputdict)
+                event[outputfield] = json.dumps(outputdict, sort_keys=self.sortkeys)
 
             yield event
 
